@@ -1,17 +1,28 @@
+import 'package:uuid/uuid.dart';
+
 enum SenderType { user, bot }
 
 class MessageModel {
-  final String id;
-  final String conversationId;
-  final String content;
-  final SenderType senderType;
-  final DateTime timestamp;
+  late final String id;
+  late final String conversationId;
+  late final String content;
+  late final SenderType senderType;
+  late final DateTime timestamp;
 
-  MessageModel({
+  MessageModel.fromLocalStorage({
     required this.id,
     required this.conversationId,
     required this.content,
     required this.senderType,
     required this.timestamp,
   });
+
+  MessageModel.createNew({
+    required this.conversationId,
+    required this.content,
+    required this.senderType,
+  }) {
+    id = const Uuid().v4();
+    timestamp = DateTime.now();
+  }
 }
