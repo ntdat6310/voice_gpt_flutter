@@ -5,6 +5,7 @@ import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/loading.dart';
+import 'package:voice_gpt_flutter/modules/chat/components/regenerate_response.dart';
 import 'package:voice_gpt_flutter/shared/constant.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:http/http.dart' as http;
@@ -18,16 +19,19 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late bool _isLoading;
+  late bool _isResponseSuccess;
   late ConversationModel _conversation;
   late final List<MessageModel> _messages;
   final _scrollController = ScrollController();
   final _textController = TextEditingController();
+  late String _textInput;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _isLoading = false;
+    _isResponseSuccess = true;
     _conversation = ConversationModel.createNew();
     _messages = [];
     _messages.add(MessageModel.createNew(
@@ -59,55 +63,82 @@ class _ChatPageState extends State<ChatPage> {
         conversationId: _conversation.id,
         content: "This is message 6",
         senderType: SenderType.bot));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 5",
-        senderType: SenderType.user));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 6",
-        senderType: SenderType.bot));
   }
 
   Future<String> generateResponse(String content) async {
-    const apiKey = apiSecretKey;
+    // const apiKey = apiSecretKey;
+    const apiKey = apiSecretKeyForErrorTest;
     var url = Uri.https("api.openai.com", "/v1/chat/completions");
-    final response = await http.post(url,
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer $apiKey",
-        },
-        body: jsonEncode({
-          "model": "gpt-3.5-turbo",
-          "messages": [
-            {
-              "role": "user",
-              "content": content,
-            }
-          ],
-          'temperature': 0,
-          'max_tokens': 1000,
-          'top_p': 1,
-          'frequency_penalty': 0.0,
-          'presence_penalty': 0.0,
-        }));
 
-    print("Response:");
-    print(response.body);
-    Map<String, dynamic> newResponse = jsonDecode(response.body);
+    // Follow OpenAI's document
+    // https://platform.openai.com/docs/guides/chat/introduction
+    // https://platform.openai.com/docs/api-reference/chat
+    final response = await http.post(
+      url,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": "Bearer $apiKey",
+      },
+      body: jsonEncode({
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          {
+            "role": "user",
+            "content": content,
+          }
+        ],
+        'temperature': 0,
+        'max_tokens': 1000,
+        'top_p': 1,
+        'frequency_penalty': 0.0,
+        'presence_penalty': 0.0,
+      }),
+    );
 
-    print("newResponse:");
-    print(newResponse);
-    String string = newResponse['choices'][0]['message']['content'];
-    final splitted = string.split("```");
-    for (int i = 0; i < splitted.length; i++) {
-      print("$i : ${splitted[i]}");
+    // Response success
+    if (response.statusCode == 200) {
+      setState(() {
+        _isResponseSuccess = true;
+      });
+      // Decode response from API using UTF-8 format.
+      String responseBody = utf8.decode(response.bodyBytes);
+
+      // Convert JSON String to Map<String, dynamic>
+      Map<String, dynamic> newResponse = jsonDecode(responseBody);
+
+      // This format is follow by OpenAI's document
+      return newResponse['choices'][0]['message']['content'];
     }
+    // Response Failed
+    else {
+      setState(() {
+        _isResponseSuccess = false;
+      });
+      debugPrint("Error: Response failed - ${response.statusCode}");
+      debugPrint("Response: ${response.body}");
+      return 'Đã có lỗi xảy ra, vui lòng thử lại.';
+    }
+  }
 
-    return newResponse['choices'][0]['message']['content'];
-    // return newResponse['choices'][0]['message']['content'];
+  void _handleRegenerateResponseButtonPress() async {
+    setState(
+      () {
+        _isLoading = true;
+      },
+    );
+
+    generateResponse(_textInput).then((value) {
+      setState(() {
+        _isLoading = false;
+        _messages.add(
+          MessageModel.createNew(
+            conversationId: _conversation.id,
+            content: value,
+            senderType: SenderType.bot,
+          ),
+        );
+      });
+    });
   }
 
   @override
@@ -122,8 +153,12 @@ class _ChatPageState extends State<ChatPage> {
       body: SafeArea(
         child: Column(
           children: [
-            Expanded(child: _buildListMessage()),
+            Expanded(child: _buildMessageList()),
             LoadingWidget(isLoading: _isLoading),
+            RegenerateResponseWidget(
+              isResponseSuccess: _isResponseSuccess,
+              onPressed: _handleRegenerateResponseButtonPress,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -139,7 +174,7 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  ListView _buildListMessage() {
+  ListView _buildMessageList() {
     return ListView.builder(
       // controller: _scrollController,
       itemCount: _messages.length,
@@ -200,13 +235,10 @@ class _ChatPageState extends State<ChatPage> {
               },
             );
 
-            var input = _textController.text;
+            _textInput = _textController.text;
             _textController.clear();
 
-            // Future.delayed(const Duration(milliseconds: 100))
-            //     .then((_) => _scrollDown());
-
-            generateResponse(input).then((value) {
+            generateResponse(_textInput).then((value) {
               setState(() {
                 _isLoading = false;
                 _messages.add(
@@ -218,9 +250,6 @@ class _ChatPageState extends State<ChatPage> {
                 );
               });
             });
-            _textController.clear();
-            // Future.delayed(const Duration(milliseconds: 100))
-            //     .then((_) => _scrollDown());
           },
         ),
       ),

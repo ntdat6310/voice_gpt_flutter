@@ -19,8 +19,10 @@ bool _isOdd(int number) {
   return number % 2 != 0;
 }
 
-List<String> _removeNewLines(List<String> strings) {
-  return strings.map((string) => string.trim()).toList();
+List<String> _replaceDoubleNewline(List<String> strings) {
+  return strings.map((string) {
+    return string.replaceAll('\n\n', '\n');
+  }).toList();
 }
 
 class _ChatMessageWidgetState extends State<ChatMessageWidget> {
@@ -30,7 +32,7 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    newContent = _removeNewLines(widget.content.split("```"));
+    newContent = _replaceDoubleNewline(widget.content.split("```"));
   }
 
   Container _buildBotIcon() {
@@ -52,7 +54,6 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(12),
       color: widget.senderType == SenderType.bot
           ? Background.botBackgroundColor
