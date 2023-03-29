@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
+import 'package:voice_gpt_flutter/modules/chat/components/code_view.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
+import 'dart:core';
 
-class ChatMessageWidget extends StatelessWidget {
-  const ChatMessageWidget(
-      {Key? key, required this.content, required this.senderType})
+class ChatMessageWidget extends StatefulWidget {
+  ChatMessageWidget({Key? key, required this.content, required this.senderType})
       : super(key: key);
   final String content;
   final SenderType senderType;
 
+  @override
+  State<ChatMessageWidget> createState() => _ChatMessageWidgetState();
+}
+
+/// If it's odd, it's the code.
+bool _isOdd(int number) {
+  return number % 2 != 0;
+}
+
+List<String> _removeNewLines(List<String> strings) {
+  return strings.map((string) => string.trim()).toList();
+}
+
+class _ChatMessageWidgetState extends State<ChatMessageWidget> {
+  late final List newContent;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    newContent = _removeNewLines(widget.content.split("```"));
+  }
+
   Container _buildBotIcon() {
     return Container(
-        margin: const EdgeInsets.only(right: 16.0),
+        margin: const EdgeInsets.only(right: 12.0),
         child: CircleAvatar(
             backgroundColor: Colors.transparent,
             child: Image.asset('assets/icons/icon_bot.png')));
@@ -19,7 +43,7 @@ class ChatMessageWidget extends StatelessWidget {
 
   Container _buildUserIcon() {
     return Container(
-        margin: const EdgeInsets.only(right: 16.0),
+        margin: const EdgeInsets.only(right: 12.0),
         child: CircleAvatar(
             backgroundColor: Colors.transparent,
             child: Image.asset('assets/icons/icon_user.png')));
@@ -29,33 +53,33 @@ class ChatMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(16),
-      color: senderType == SenderType.bot
+      padding: const EdgeInsets.all(12),
+      color: widget.senderType == SenderType.bot
           ? Background.botBackgroundColor
           : Background.backgroundColor,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          senderType == SenderType.bot ? _buildBotIcon() : _buildUserIcon(),
+          widget.senderType == SenderType.bot
+              ? _buildBotIcon()
+              : _buildUserIcon(),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                  ),
-                  child: Text(
-                    content,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(newContent.length, (index) {
+                  if (_isOdd(index)) {
+                    return CodeViewWidget(code: newContent[index]);
+                  } else {
+                    return Text(
+                      newContent[index],
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                        height: 1.5,
+                      ),
+                    );
+                  }
+                })),
           )
         ],
       ),
