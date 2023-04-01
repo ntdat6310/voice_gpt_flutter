@@ -3,15 +3,15 @@ import 'package:voice_gpt_flutter/shared/styles/background.dart';
 
 class RegenerateResponseWidget extends StatelessWidget {
   const RegenerateResponseWidget(
-      {Key? key, required this.isResponseSuccess, required this.onPressed})
+      {Key? key, required this.isShowRegenerateResponse, required this.onPressed})
       : super(key: key);
-  final bool isResponseSuccess;
+  final bool isShowRegenerateResponse;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: !isResponseSuccess,
+      visible: isShowRegenerateResponse,
       child: Container(
         padding: const EdgeInsets.all(12),
         color: Background.backgroundColor,

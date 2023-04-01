@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
+import 'package:voice_gpt_flutter/data/services/chat_gpt_service.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/loading.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/regenerate_response.dart';
@@ -19,10 +20,9 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late bool _isLoading;
-  late bool _isResponseSuccess;
+  late bool _isShowRegenerateResponse;
   late ConversationModel _conversation;
   late final List<MessageModel> _messages;
-  final _scrollController = ScrollController();
   final _textController = TextEditingController();
   late String _textInput;
 
@@ -31,92 +31,52 @@ class _ChatPageState extends State<ChatPage> {
     // TODO: implement initState
     super.initState();
     _isLoading = false;
-    _isResponseSuccess = true;
+    _isShowRegenerateResponse = false;
     _conversation = ConversationModel.createNew();
     _messages = [];
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 1",
-        senderType: SenderType.user));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 2",
-        senderType: SenderType.bot));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 3",
-        senderType: SenderType.user));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 4",
-        senderType: SenderType.bot));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 5",
-        senderType: SenderType.user));
-
-    _messages.add(MessageModel.createNew(
-        conversationId: _conversation.id,
-        content: "This is message 6",
-        senderType: SenderType.bot));
   }
 
-  Future<String> generateResponse(String content) async {
-    // const apiKey = apiSecretKey;
-    const apiKey = apiSecretKeyForErrorTest;
-    var url = Uri.https("api.openai.com", "/v1/chat/completions");
+  void handleButtonSubmitClick() async {
+    _textInput = _textController.text;
+    _textController.clear();
 
-    // Follow OpenAI's document
-    // https://platform.openai.com/docs/guides/chat/introduction
-    // https://platform.openai.com/docs/api-reference/chat
-    final response = await http.post(
-      url,
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Bearer $apiKey",
+    setState(
+      () {
+        _messages.add(MessageModel.createNew(
+          conversationId: _conversation.id,
+          content: _textInput,
+          senderType: SenderType.user,
+        ));
+        _isLoading = true;
       },
-      body: jsonEncode({
-        "model": "gpt-3.5-turbo",
-        "messages": [
-          {
-            "role": "user",
-            "content": content,
-          }
-        ],
-        'temperature': 0,
-        'max_tokens': 1000,
-        'top_p': 1,
-        'frequency_penalty': 0.0,
-        'presence_penalty': 0.0,
-      }),
     );
 
-    // Response success
-    if (response.statusCode == 200) {
+    try {
+      ChatGptService chatGptService = ChatGptService();
+      String response = await chatGptService.fetchChatResponse(_textInput);
       setState(() {
-        _isResponseSuccess = true;
+        _isLoading = false;
+        _isShowRegenerateResponse = false;
+        _messages.add(
+          MessageModel.createNew(
+            conversationId: _conversation.id,
+            content: response,
+            senderType: SenderType.bot,
+          ),
+        );
       });
-      // Decode response from API using UTF-8 format.
-      String responseBody = utf8.decode(response.bodyBytes);
-
-      // Convert JSON String to Map<String, dynamic>
-      Map<String, dynamic> newResponse = jsonDecode(responseBody);
-
-      // This format is follow by OpenAI's document
-      return newResponse['choices'][0]['message']['content'];
-    }
-    // Response Failed
-    else {
+    } catch (e) {
       setState(() {
-        _isResponseSuccess = false;
+        _isLoading = false;
+        _isShowRegenerateResponse = true;
+        _messages.add(
+          MessageModel.createNew(
+            conversationId: _conversation.id,
+            content: "Đã có lỗi xảy ra, xin vui lòng thử lại.",
+            senderType: SenderType.bot,
+          ),
+        );
       });
-      debugPrint("Error: Response failed - ${response.statusCode}");
-      debugPrint("Response: ${response.body}");
-      return 'Đã có lỗi xảy ra, vui lòng thử lại.';
     }
   }
 
@@ -124,21 +84,73 @@ class _ChatPageState extends State<ChatPage> {
     setState(
       () {
         _isLoading = true;
+        _isShowRegenerateResponse = false;
       },
     );
 
-    generateResponse(_textInput).then((value) {
+    try {
+      ChatGptService chatGptService = ChatGptService();
+      String response = await chatGptService.fetchChatResponse(_textInput);
       setState(() {
         _isLoading = false;
         _messages.add(
           MessageModel.createNew(
             conversationId: _conversation.id,
-            content: value,
+            content: response,
             senderType: SenderType.bot,
           ),
         );
       });
-    });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _isShowRegenerateResponse = true;
+      });
+    }
+  }
+
+  void handleButtonSubmitClickWithAllHistory() async {
+    _textInput = _textController.text;
+    _textController.clear();
+
+    setState(
+          () {
+        _messages.add(MessageModel.createNew(
+          conversationId: _conversation.id,
+          content: _textInput,
+          senderType: SenderType.user,
+        ));
+        _isLoading = true;
+      },
+    );
+
+    try {
+      ChatGptService chatGptService = ChatGptService();
+      String response = await chatGptService.fetchChatResponseWithAllHistory(_messages);
+      setState(() {
+        _isLoading = false;
+        _isShowRegenerateResponse = false;
+        _messages.add(
+          MessageModel.createNew(
+            conversationId: _conversation.id,
+            content: response,
+            senderType: SenderType.bot,
+          ),
+        );
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _isShowRegenerateResponse = true;
+        _messages.add(
+          MessageModel.createNew(
+            conversationId: _conversation.id,
+            content: "Đã có lỗi xảy ra, xin vui lòng thử lại.",
+            senderType: SenderType.bot,
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -156,7 +168,7 @@ class _ChatPageState extends State<ChatPage> {
             Expanded(child: _buildMessageList()),
             LoadingWidget(isLoading: _isLoading),
             RegenerateResponseWidget(
-              isResponseSuccess: _isResponseSuccess,
+              isShowRegenerateResponse: _isShowRegenerateResponse,
               onPressed: _handleRegenerateResponseButtonPress,
             ),
             Padding(
@@ -183,14 +195,6 @@ class _ChatPageState extends State<ChatPage> {
             content: _messages[index].content,
             senderType: _messages[index].senderType);
       },
-    );
-  }
-
-  void _scrollDown() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
     );
   }
 
@@ -224,32 +228,7 @@ class _ChatPageState extends State<ChatPage> {
             color: Color.fromRGBO(142, 142, 160, 1),
           ),
           onPressed: () async {
-            setState(
-              () {
-                _messages.add(MessageModel.createNew(
-                  conversationId: _conversation.id,
-                  content: _textController.text,
-                  senderType: SenderType.user,
-                ));
-                _isLoading = true;
-              },
-            );
-
-            _textInput = _textController.text;
-            _textController.clear();
-
-            generateResponse(_textInput).then((value) {
-              setState(() {
-                _isLoading = false;
-                _messages.add(
-                  MessageModel.createNew(
-                    conversationId: _conversation.id,
-                    content: value,
-                    senderType: SenderType.bot,
-                  ),
-                );
-              });
-            });
+            handleButtonSubmitClickWithAllHistory();
           },
         ),
       ),
