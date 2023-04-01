@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:voice_gpt_flutter/data/models/conversation.dart';
-import 'package:voice_gpt_flutter/data/models/message.dart';
-import 'package:voice_gpt_flutter/data/services/chat_gpt_service.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:voice_gpt_flutter/modules/chat/chat_controller.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/loading.dart';
 import 'package:voice_gpt_flutter/modules/chat/components/regenerate_response.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class ChatPage extends StatelessWidget {
+  ChatPage({Key? key}) : super(key: key);
 
-  @override
-  State<ChatPage> createState() => _ChatPageState();
-}
-
-class _ChatPageState extends State<ChatPage> {
   final ChatController chatController = ChatController();
 
   @override
