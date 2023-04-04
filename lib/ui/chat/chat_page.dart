@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:voice_gpt_flutter/modules/chat/chat_controller.dart';
-import 'package:voice_gpt_flutter/modules/chat/components/chat_message.dart';
-import 'package:voice_gpt_flutter/modules/chat/components/loading.dart';
-import 'package:voice_gpt_flutter/modules/chat/components/regenerate_response.dart';
+import 'package:voice_gpt_flutter/ui/chat/components/chat_message.dart';
+import 'package:voice_gpt_flutter/ui/chat/components/loading.dart';
+import 'package:voice_gpt_flutter/ui/chat/components/regenerate_response.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
+import 'package:voice_gpt_flutter/stores/chat/chat_store.dart';
 
 class ChatPage extends StatelessWidget {
   ChatPage({Key? key}) : super(key: key);
 
-  final ChatController chatController = ChatController();
+  final ChatStore chatStore = ChatStore();
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +25,12 @@ class ChatPage extends StatelessWidget {
           builder: (_) => Column(
             children: [
               Expanded(child: _buildMessageList()),
-              LoadingWidget(isLoading: chatController.isLoading),
+              LoadingWidget(isLoading: chatStore.isLoading),
               RegenerateResponseWidget(
                 isShowRegenerateResponse:
-                    chatController.isShowRegenerateResponse,
+                    chatStore.isShowRegenerateResponse,
                 onPressed: () async {
-                  chatController.handleRegenerateResponseButtonPress();
+                  chatStore.handleRegenerateResponseButtonPress();
                 },
               ),
               Padding(
@@ -51,11 +51,11 @@ class ChatPage extends StatelessWidget {
 
   ListView _buildMessageList() {
     return ListView.builder(
-      itemCount: chatController.messages.length,
+      itemCount: chatStore.messages.length,
       itemBuilder: (context, index) {
         return ChatMessageWidget(
-            content: chatController.messages[index].content,
-            senderType: chatController.messages[index].senderType);
+            content: chatStore.messages[index].content,
+            senderType: chatStore.messages[index].senderType);
       },
     );
   }
@@ -65,7 +65,7 @@ class ChatPage extends StatelessWidget {
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
         style: const TextStyle(color: Colors.white),
-        controller: chatController.textController,
+        controller: chatStore.textController,
         decoration: const InputDecoration(
           fillColor: Background.botBackgroundColor,
           filled: true,
@@ -81,7 +81,7 @@ class ChatPage extends StatelessWidget {
 
   Widget _buildSubmit() {
     return Visibility(
-      visible: !chatController.isLoading,
+      visible: !chatStore.isLoading,
       child: Container(
         color: Background.botBackgroundColor,
         child: IconButton(
@@ -90,7 +90,7 @@ class ChatPage extends StatelessWidget {
             color: Color.fromRGBO(142, 142, 160, 1),
           ),
           onPressed: () async {
-            chatController.handleButtonSubmitClickWithAllHistory();
+            chatStore.handleButtonSubmitClickWithAllHistory();
           },
         ),
       ),

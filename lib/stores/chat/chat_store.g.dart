@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'chat_controller.dart';
+part of 'chat_store.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,9 +8,9 @@ part of 'chat_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ChatController on _ChatControllerBase, Store {
+mixin _$ChatStore on _ChatStoreBase, Store {
   late final _$_isLoadingAtom =
-      Atom(name: '_ChatControllerBase._isLoading', context: context);
+      Atom(name: '_ChatStoreBase._isLoading', context: context);
 
   bool get isLoading {
     _$_isLoadingAtom.reportRead();
@@ -27,8 +27,8 @@ mixin _$ChatController on _ChatControllerBase, Store {
     });
   }
 
-  late final _$_isShowRegenerateResponseAtom = Atom(
-      name: '_ChatControllerBase._isShowRegenerateResponse', context: context);
+  late final _$_isShowRegenerateResponseAtom =
+      Atom(name: '_ChatStoreBase._isShowRegenerateResponse', context: context);
 
   bool get isShowRegenerateResponse {
     _$_isShowRegenerateResponseAtom.reportRead();
@@ -47,7 +47,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$_conversationAtom =
-      Atom(name: '_ChatControllerBase._conversation', context: context);
+      Atom(name: '_ChatStoreBase._conversation', context: context);
 
   ConversationModel get conversation {
     _$_conversationAtom.reportRead();
@@ -65,7 +65,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$_messagesAtom =
-      Atom(name: '_ChatControllerBase._messages', context: context);
+      Atom(name: '_ChatStoreBase._messages', context: context);
 
   List<MessageModel> get messages {
     _$_messagesAtom.reportRead();
@@ -83,7 +83,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$textControllerAtom =
-      Atom(name: '_ChatControllerBase.textController', context: context);
+      Atom(name: '_ChatStoreBase.textController', context: context);
 
   @override
   TextEditingController get textController {
@@ -99,7 +99,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$_textInputAtom =
-      Atom(name: '_ChatControllerBase._textInput', context: context);
+      Atom(name: '_ChatStoreBase._textInput', context: context);
 
   String get textInput {
     _$_textInputAtom.reportRead();
@@ -117,7 +117,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$handleButtonSubmitClickWithAllHistoryAsyncAction = AsyncAction(
-      '_ChatControllerBase.handleButtonSubmitClickWithAllHistory',
+      '_ChatStoreBase.handleButtonSubmitClickWithAllHistory',
       context: context);
 
   @override
@@ -126,9 +126,8 @@ mixin _$ChatController on _ChatControllerBase, Store {
         .run(() => super.handleButtonSubmitClickWithAllHistory());
   }
 
-  late final _$handleButtonSubmitClickAsyncAction = AsyncAction(
-      '_ChatControllerBase.handleButtonSubmitClick',
-      context: context);
+  late final _$handleButtonSubmitClickAsyncAction =
+      AsyncAction('_ChatStoreBase.handleButtonSubmitClick', context: context);
 
   @override
   Future<void> handleButtonSubmitClick() {
@@ -137,7 +136,7 @@ mixin _$ChatController on _ChatControllerBase, Store {
   }
 
   late final _$handleRegenerateResponseButtonPressAsyncAction = AsyncAction(
-      '_ChatControllerBase.handleRegenerateResponseButtonPress',
+      '_ChatStoreBase.handleRegenerateResponseButtonPress',
       context: context);
 
   @override
@@ -146,83 +145,83 @@ mixin _$ChatController on _ChatControllerBase, Store {
         .run(() => super.handleRegenerateResponseButtonPress());
   }
 
-  late final _$_ChatControllerBaseActionController =
-      ActionController(name: '_ChatControllerBase', context: context);
+  late final _$_ChatStoreBaseActionController =
+      ActionController(name: '_ChatStoreBase', context: context);
 
   @override
   void clearInput() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.clearInput');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.clearInput');
     try {
       return super.clearInput();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void enableLoading() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.enableLoading');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.enableLoading');
     try {
       return super.enableLoading();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void disableLoading() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.disableLoading');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.disableLoading');
     try {
       return super.disableLoading();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void enableShowRegenerateResponse() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.enableShowRegenerateResponse');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.enableShowRegenerateResponse');
     try {
       return super.enableShowRegenerateResponse();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void disableShowRegenerateResponse() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.disableShowRegenerateResponse');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.disableShowRegenerateResponse');
     try {
       return super.disableShowRegenerateResponse();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void addUserMessageToList() {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.addUserMessageToList');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.addUserMessageToList');
     try {
       return super.addUserMessageToList();
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void addBotMessageToList(String botMessage) {
-    final _$actionInfo = _$_ChatControllerBaseActionController.startAction(
-        name: '_ChatControllerBase.addBotMessageToList');
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.addBotMessageToList');
     try {
       return super.addBotMessageToList(botMessage);
     } finally {
-      _$_ChatControllerBaseActionController.endAction(_$actionInfo);
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 

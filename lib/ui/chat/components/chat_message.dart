@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
-import 'package:voice_gpt_flutter/modules/chat/components/code_view.dart';
+import 'package:voice_gpt_flutter/ui/chat/components/code_view.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'dart:core';
 
 class ChatMessageWidget extends StatefulWidget {
-  ChatMessageWidget({Key? key, required this.content, required this.senderType})
+  const ChatMessageWidget({Key? key, required this.content, required this.senderType})
       : super(key: key);
   final String content;
   final SenderType senderType;

@@ -5,11 +5,11 @@ import '../../data/models/conversation.dart';
 import '../../data/models/message.dart';
 import '../../data/services/chat_gpt_service.dart';
 
-part 'chat_controller.g.dart';
+part 'chat_store.g.dart';
 
-class ChatController = _ChatControllerBase with _$ChatController;
+class ChatStore = _ChatStoreBase with _$ChatStore;
 
-abstract class _ChatControllerBase with Store {
+abstract class _ChatStoreBase with Store {
   @readonly
   bool _isLoading = false;
 
