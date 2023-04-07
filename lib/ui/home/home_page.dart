@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
+import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 import 'package:voice_gpt_flutter/ui/home/components/conversation.dart';
 
 List<ConversationModel> getConversations() {
@@ -9,17 +10,17 @@ List<ConversationModel> getConversations() {
   conversations.add(ConversationModel.createNew());
   conversations.add(ConversationModel.createNew());
   conversations.add(ConversationModel.createNew());
-  conversations[0].messages.add(MessageModel.createNew(
-      conversationId: "1", content: "Hello 01", senderType: SenderType.user));
-  conversations[1].messages.add(MessageModel.createNew(
-      conversationId: "2", content: "Hello 02", senderType: SenderType.user));
-  conversations[2].messages.add(MessageModel.createNew(
-      conversationId: "3", content: "Hello 03", senderType: SenderType.user));
+  conversations[0].messages.add(
+      MessageModel.createNew(content: "Hello 01", senderType: SenderType.user));
+  conversations[1].messages.add(
+      MessageModel.createNew(content: "Hello 02", senderType: SenderType.user));
+  conversations[2].messages.add(
+      MessageModel.createNew(content: "Hello 03", senderType: SenderType.user));
   return conversations;
 }
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,13 @@ class HomePage extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 16)),
                     elevation: MaterialStateProperty.all(0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(conversation: null),
+                        ));
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

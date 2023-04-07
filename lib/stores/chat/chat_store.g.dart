@@ -64,24 +64,6 @@ mixin _$ChatStore on _ChatStoreBase, Store {
     });
   }
 
-  late final _$_messagesAtom =
-      Atom(name: '_ChatStoreBase._messages', context: context);
-
-  List<MessageModel> get messages {
-    _$_messagesAtom.reportRead();
-    return super._messages;
-  }
-
-  @override
-  List<MessageModel> get _messages => messages;
-
-  @override
-  set _messages(List<MessageModel> value) {
-    _$_messagesAtom.reportWrite(value, super._messages, () {
-      super._messages = value;
-    });
-  }
-
   late final _$textControllerAtom =
       Atom(name: '_ChatStoreBase.textController', context: context);
 
@@ -198,6 +180,17 @@ mixin _$ChatStore on _ChatStoreBase, Store {
         name: '_ChatStoreBase.disableShowRegenerateResponse');
     try {
       return super.disableShowRegenerateResponse();
+    } finally {
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void writeConversationToSQLite() {
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.writeConversationToSQLite');
+    try {
+      return super.writeConversationToSQLite();
     } finally {
       _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }

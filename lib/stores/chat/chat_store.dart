@@ -20,12 +20,15 @@ abstract class _ChatStoreBase with Store {
   // Do not make it final => Build failed
   // MobX will automatically monitor changes to these
   // and update the interface as needed.
-  ConversationModel _conversation = ConversationModel.createNew();
+  late ConversationModel _conversation;
 
-  @readonly
-  // Do not make it final => Build failed
-  List<MessageModel> _messages = [];
-
+  _ChatStoreBase({required ConversationModel? conversation})
+      : _conversation = conversation ?? ConversationModel.createNew() {
+    reaction((_) => _conversation.messages.length, (_) {
+      print(_conversation.messages.toString());
+      print("Length: ${_conversation.messages.length}");
+    });
+  }
 
   @observable
   TextEditingController textController = TextEditingController();
@@ -60,14 +63,13 @@ abstract class _ChatStoreBase with Store {
   }
 
   @action
-  void writeConversationToSQLite(){
+  void writeConversationToSQLite() {
     // handle logic
   }
 
   @action
   void addUserMessageToList() {
-    _messages.add(MessageModel.createNew(
-      conversationId: _conversation.id,
+    _conversation.messages.add(MessageModel.createNew(
       content: _textInput,
       senderType: SenderType.user,
     ));
@@ -75,9 +77,8 @@ abstract class _ChatStoreBase with Store {
 
   @action
   void addBotMessageToList(String botMessage) {
-    _messages.add(
+    _conversation.messages.add(
       MessageModel.createNew(
-        conversationId: _conversation.id,
         content: botMessage,
         senderType: SenderType.bot,
       ),
@@ -91,8 +92,8 @@ abstract class _ChatStoreBase with Store {
     enableLoading();
     try {
       ChatGptService chatGptService = ChatGptService();
-      String botMessage =
-          await chatGptService.fetchChatResponseWithAllHistory(_messages);
+      String botMessage = await chatGptService
+          .fetchChatResponseWithAllHistory(_conversation.messages);
       disableLoading();
       disableShowRegenerateResponse();
       addBotMessageToList(botMessage);

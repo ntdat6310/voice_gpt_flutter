@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/loading.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/regenerate_response.dart';
@@ -7,9 +8,12 @@ import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:voice_gpt_flutter/stores/chat/chat_store.dart';
 
 class ChatPage extends StatelessWidget {
-  ChatPage({Key? key}) : super(key: key);
+  ChatPage({Key? key, required this.conversation}) : super(key: key);
+  final ConversationModel? conversation;
+  final ChatStore chatStore = ChatStore(conversation: null);
 
-  final ChatStore chatStore = ChatStore();
+  // Tìm hiểu xem khi widget này bị gỡ khỏi stack thì gọi method nào
+  // Từ đó gọi hàm write vào local storage (Hive)
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,7 @@ class ChatPage extends StatelessWidget {
               Expanded(child: _buildMessageList()),
               LoadingWidget(isLoading: chatStore.isLoading),
               RegenerateResponseWidget(
-                isShowRegenerateResponse:
-                    chatStore.isShowRegenerateResponse,
+                isShowRegenerateResponse: chatStore.isShowRegenerateResponse,
                 onPressed: () async {
                   chatStore.handleRegenerateResponseButtonPress();
                 },
@@ -51,11 +54,11 @@ class ChatPage extends StatelessWidget {
 
   ListView _buildMessageList() {
     return ListView.builder(
-      itemCount: chatStore.messages.length,
+      itemCount: chatStore.conversation.messages.length,
       itemBuilder: (context, index) {
         return ChatMessageWidget(
-            content: chatStore.messages[index].content,
-            senderType: chatStore.messages[index].senderType);
+            content: chatStore.conversation.messages[index].content,
+            senderType: chatStore.conversation.messages[index].senderType);
       },
     );
   }
