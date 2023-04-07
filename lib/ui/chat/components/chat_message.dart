@@ -14,7 +14,8 @@ class ChatMessageWidget extends StatefulWidget {
   State<ChatMessageWidget> createState() => _ChatMessageWidgetState();
 }
 
-/// If it's odd, it's the code.
+/// If it's odd, it's the code block.
+/// Using CodeView to render.
 bool _isOdd(int number) {
   return number % 2 != 0;
 }

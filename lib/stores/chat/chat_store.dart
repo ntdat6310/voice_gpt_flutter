@@ -26,6 +26,7 @@ abstract class _ChatStoreBase with Store {
   // Do not make it final => Build failed
   List<MessageModel> _messages = [];
 
+
   @observable
   TextEditingController textController = TextEditingController();
 
@@ -56,6 +57,11 @@ abstract class _ChatStoreBase with Store {
   @action
   void disableShowRegenerateResponse() {
     _isShowRegenerateResponse = false;
+  }
+
+  @action
+  void writeConversationToSQLite(){
+    // handle logic
   }
 
   @action

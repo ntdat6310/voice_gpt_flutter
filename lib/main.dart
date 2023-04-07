@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:voice_gpt_flutter/data/shared_preferences/shared_preference_helper.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
+import 'package:voice_gpt_flutter/ui/home/home_page.dart';
 
-void main() {
+void main()  async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize SharedPreferenceHelper
+  await SharedPreferenceHelper().init();
+
   runApp(const MyApp());
 }
 
