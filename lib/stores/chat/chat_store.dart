@@ -24,9 +24,10 @@ abstract class _ChatStoreBase with Store {
 
   _ChatStoreBase({required ConversationModel? conversation})
       : _conversation = conversation ?? ConversationModel.createNew() {
-    reaction((_) => _conversation.messages.length, (_) {
-      print(_conversation.messages.toString());
-      print("Length: ${_conversation.messages.length}");
+    reaction((_) => _conversation.messageObservable.length, (_) {
+      print(_conversation.messageObservable.toString());
+      print("Length messageObservable: ${_conversation.messageObservable.length}");
+      print("Length messageList: ${_conversation.messageList.length}");
     });
   }
 
@@ -69,7 +70,11 @@ abstract class _ChatStoreBase with Store {
 
   @action
   void addUserMessageToList() {
-    _conversation.messages.add(MessageModel.createNew(
+    // _conversation.messageList.add(MessageModel.createNew(
+    //   content: _textInput,
+    //   senderType: SenderType.user,
+    // ));
+    _conversation.messageObservable.add(MessageModel.createNew(
       content: _textInput,
       senderType: SenderType.user,
     ));
@@ -77,7 +82,14 @@ abstract class _ChatStoreBase with Store {
 
   @action
   void addBotMessageToList(String botMessage) {
-    _conversation.messages.add(
+    // _conversation.messageList.add(
+    //   MessageModel.createNew(
+    //     content: botMessage,
+    //     senderType: SenderType.bot,
+    //   ),
+    // );
+
+    _conversation.messageObservable.add(
       MessageModel.createNew(
         content: botMessage,
         senderType: SenderType.bot,
@@ -93,7 +105,7 @@ abstract class _ChatStoreBase with Store {
     try {
       ChatGptService chatGptService = ChatGptService();
       String botMessage = await chatGptService
-          .fetchChatResponseWithAllHistory(_conversation.messages);
+          .fetchChatResponseWithAllHistory(_conversation.messageObservable);
       disableLoading();
       disableShowRegenerateResponse();
       addBotMessageToList(botMessage);

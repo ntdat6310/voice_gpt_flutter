@@ -10,11 +10,11 @@ List<ConversationModel> getConversations() {
   conversations.add(ConversationModel.createNew());
   conversations.add(ConversationModel.createNew());
   conversations.add(ConversationModel.createNew());
-  conversations[0].messages.add(
+  conversations[0].messageList.add(
       MessageModel.createNew(content: "Hello 01", senderType: SenderType.user));
-  conversations[1].messages.add(
+  conversations[1].messageList.add(
       MessageModel.createNew(content: "Hello 02", senderType: SenderType.user));
-  conversations[2].messages.add(
+  conversations[2].messageList.add(
       MessageModel.createNew(content: "Hello 03", senderType: SenderType.user));
   return conversations;
 }

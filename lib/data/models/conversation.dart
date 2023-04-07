@@ -1,36 +1,50 @@
+// conversation.dart
+import 'package:hive/hive.dart';
 import 'package:mobx/mobx.dart';
 
 import 'message.dart';
 
-class ConversationModel {
-  // Lấy createAt làm id luôn.
+part 'conversation.g.dart';
+
+@HiveType(typeId: 0)
+class ConversationModel extends HiveObject {
+  @HiveField(0)
   final DateTime createdAt;
 
-  // Dùng ObservableList để Mobx có thể theo dõi conversation.messages
-  // Nếu chỉ dùng List, khi messages (property) thay đổi thì conversation vẫn không đổi
-  // => Mobx không nhận biết được => Các reaction sẽ không chạy, UI sẽ không update
+  // Sử dụng kiểu List<MessageModel> để lưu trữ messages trong Hive
+  @HiveField(1)
+  List<MessageModel> messageList;
 
-  final ObservableList<MessageModel> messages;
+  late ObservableList<MessageModel> messageObservable;
 
-  ConversationModel._({
+  // Constructor không tên sẽ được sử dụng bởi Hive
+  ConversationModel({
     required this.createdAt,
-    required this.messages,
+  }) : messageList = [];
+
+  // Named constructor cho các trường hợp khác
+  ConversationModel.withMessages({
+    required this.createdAt,
+    required this.messageList,
+    required this.messageObservable,
   });
 
   factory ConversationModel.createNew() {
-    return ConversationModel._(
+    return ConversationModel.withMessages(
       createdAt: DateTime.now(),
-      messages: ObservableList<MessageModel>(),
+      messageList: [],
+      messageObservable: ObservableList<MessageModel>(),
     );
   }
 
   factory ConversationModel.fromLocal({
     required DateTime createdAt,
-    required List<MessageModel> messages,
+    required List<MessageModel> messageList,
   }) {
-    return ConversationModel._(
+    return ConversationModel.withMessages(
       createdAt: createdAt,
-      messages: ObservableList<MessageModel>.of(messages),
+      messageList: messageList,
+      messageObservable: ObservableList<MessageModel>.of(messageList),
     );
   }
 }

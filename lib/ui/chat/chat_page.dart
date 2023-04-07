@@ -54,11 +54,11 @@ class ChatPage extends StatelessWidget {
 
   ListView _buildMessageList() {
     return ListView.builder(
-      itemCount: chatStore.conversation.messages.length,
+      itemCount: chatStore.conversation.messageObservable.length,
       itemBuilder: (context, index) {
         return ChatMessageWidget(
-            content: chatStore.conversation.messages[index].content,
-            senderType: chatStore.conversation.messages[index].senderType);
+            content: chatStore.conversation.messageObservable[index].content,
+            senderType: chatStore.conversation.messageObservable[index].senderType);
       },
     );
   }
