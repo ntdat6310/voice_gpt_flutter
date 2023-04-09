@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:voice_gpt_flutter/stores/speak_to_text/speech_to_text.dart';
 
 import '../../data/models/conversation.dart';
 import '../../data/models/message.dart';
@@ -10,6 +11,8 @@ part 'chat_store.g.dart';
 class ChatStore = _ChatStoreBase with _$ChatStore;
 
 abstract class _ChatStoreBase with Store {
+  late SpeechToTextStore _speechToTextStore;
+
   @readonly
   bool _isLoading = false;
 
@@ -22,14 +25,24 @@ abstract class _ChatStoreBase with Store {
   // and update the interface as needed.
   late ConversationModel _conversation;
 
-  _ChatStoreBase({required ConversationModel conversation})
-      : _conversation = conversation;
+  _ChatStoreBase(
+      {required ConversationModel conversation,
+      required SpeechToTextStore speechToTextStore})
+      : _conversation = conversation,
+        _speechToTextStore = speechToTextStore;
 
   @observable
   TextEditingController textController = TextEditingController();
 
   @readonly
   String _textInput = '';
+
+  @action
+  void updateTextField() {
+    textController.text = _speechToTextStore.lastWords;
+    textController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _speechToTextStore.lastWords.length));
+  }
 
   @action
   void clearInput() {
@@ -58,16 +71,7 @@ abstract class _ChatStoreBase with Store {
   }
 
   @action
-  void writeConversationToSQLite() {
-    // handle logic
-  }
-
-  @action
   void addUserMessageToList() {
-    // _conversation.messageList.add(MessageModel.createNew(
-    //   content: _textInput,
-    //   senderType: SenderType.user,
-    // ));
     _conversation.messageObservable.add(MessageModel.createNew(
       content: _textInput,
       senderType: SenderType.user,
@@ -76,13 +80,6 @@ abstract class _ChatStoreBase with Store {
 
   @action
   void addBotMessageToList(String botMessage) {
-    // _conversation.messageList.add(
-    //   MessageModel.createNew(
-    //     content: botMessage,
-    //     senderType: SenderType.bot,
-    //   ),
-    // );
-
     _conversation.messageObservable.add(
       MessageModel.createNew(
         content: botMessage,

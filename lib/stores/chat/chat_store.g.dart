@@ -131,6 +131,17 @@ mixin _$ChatStore on _ChatStoreBase, Store {
       ActionController(name: '_ChatStoreBase', context: context);
 
   @override
+  void updateTextField() {
+    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
+        name: '_ChatStoreBase.updateTextField');
+    try {
+      return super.updateTextField();
+    } finally {
+      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void clearInput() {
     final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
         name: '_ChatStoreBase.clearInput');
@@ -180,17 +191,6 @@ mixin _$ChatStore on _ChatStoreBase, Store {
         name: '_ChatStoreBase.disableShowRegenerateResponse');
     try {
       return super.disableShowRegenerateResponse();
-    } finally {
-      _$_ChatStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void writeConversationToSQLite() {
-    final _$actionInfo = _$_ChatStoreBaseActionController.startAction(
-        name: '_ChatStoreBase.writeConversationToSQLite');
-    try {
-      return super.writeConversationToSQLite();
     } finally {
       _$_ChatStoreBaseActionController.endAction(_$actionInfo);
     }

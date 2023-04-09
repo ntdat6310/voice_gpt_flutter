@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/services/local_storage_service.dart';
+import 'package:voice_gpt_flutter/stores/speak_to_text/speech_to_text.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/loading.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/regenerate_response.dart';
@@ -19,9 +20,15 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late final ChatStore chatStore;
   late final int messageLength;
+  late final SpeechToTextStore speechToTextStore;
+
   @override
   void initState() {
-    chatStore = ChatStore(conversation: widget.conversation);
+    speechToTextStore = SpeechToTextStore();
+    chatStore = ChatStore(
+        conversation: widget.conversation,
+        speechToTextStore: speechToTextStore);
+    speechToTextStore.setOnSpeechResultCallback(chatStore.updateTextField);
     messageLength = chatStore.conversation.messageObservable.length;
     super.initState();
   }
@@ -39,7 +46,6 @@ class _ChatPageState extends State<ChatPage> {
     }
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +78,7 @@ class _ChatPageState extends State<ChatPage> {
                   child: Row(
                     children: [
                       _buildInput(),
+                      _buildVoiceInputButton(),
                       _buildSubmit(),
                     ],
                   ),
@@ -125,6 +132,24 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  Widget _buildVoiceInputButton() {
+    return Container(
+      color: Background.botBackgroundColor,
+      child: IconButton(
+        onPressed: () {
+          print(
+              "speechToTextStore.isListening ${speechToTextStore.isListening.toString()}");
+          speechToTextStore.isListening
+              ? speechToTextStore.stopListening()
+              : speechToTextStore.startListening();
+        },
+        icon: speechToTextStore.isListening
+            ? const Icon(Icons.mic_off, color: Colors.white)
+            : const Icon(Icons.mic, color: Colors.white),
+      ),
+    );
+  }
+
   Widget _buildSubmit() {
     return Visibility(
       visible: !chatStore.isLoading,
@@ -133,7 +158,8 @@ class _ChatPageState extends State<ChatPage> {
         child: IconButton(
           icon: const Icon(
             Icons.send_rounded,
-            color: Color.fromRGBO(142, 142, 160, 1),
+            color: Colors.white,
+            // color: Color.fromRGBO(142, 142, 160, 1),
           ),
           onPressed: () async {
             chatStore.handleButtonSubmitClickWithAllHistory();
