@@ -18,7 +18,8 @@ class ConversationModelAdapter extends TypeAdapter<ConversationModel> {
     };
     return ConversationModel(
       createdAt: fields[0] as DateTime,
-    )..messageList = (fields[1] as List).cast<MessageModel>();
+      messageList: (fields[1] as List).cast<MessageModel>(),
+    );
   }
 
   @override

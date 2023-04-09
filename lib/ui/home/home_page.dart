@@ -1,33 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
+import 'package:voice_gpt_flutter/stores/home/home_store.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 import 'package:voice_gpt_flutter/ui/home/components/conversation.dart';
 
-List<ConversationModel> getConversations() {
-  final List<ConversationModel> conversations = [];
-  conversations.add(ConversationModel.createNew());
-  conversations.add(ConversationModel.createNew());
-  conversations.add(ConversationModel.createNew());
-  conversations[0].messageList.add(
-      MessageModel.createNew(content: "Hello 01", senderType: SenderType.user));
-  conversations[1].messageList.add(
-      MessageModel.createNew(content: "Hello 02", senderType: SenderType.user));
-  conversations[2].messageList.add(
-      MessageModel.createNew(content: "Hello 03", senderType: SenderType.user));
-  return conversations;
-}
-
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  final HomeStore homeStore = HomeStore();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-            title: const Text("Hello"),
+            title: const Text("Home"),
             backgroundColor: Background.botBackgroundColor),
         body: Container(
           color: Background.backgroundColor,
@@ -45,12 +36,16 @@ class HomePage extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 16)),
                     elevation: MaterialStateProperty.all(0),
                   ),
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    ConversationModel? newConversation = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatPage(conversation: null),
+                          builder: (context) => ChatPage(
+                              conversation: homeStore.createNewConversation()),
                         ));
+                    if (newConversation != null) {
+                      homeStore.addConversation(newConversation);
+                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +64,10 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(child: _buildConversationList()),
+                Observer(
+                    builder: (_) => Expanded(
+                        child: _buildConversationList(
+                            conversations: homeStore.conversations))),
                 const Divider(
                   color: Colors.white38,
                   thickness: 2,
@@ -134,13 +132,15 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  ListView _buildConversationList() {
-    final List<ConversationModel> conversations = getConversations();
-
+  ListView _buildConversationList(
+      {required ObservableList<ConversationModel> conversations}) {
+    print("_buildConversationList ${conversations.length}");
     return ListView.builder(
       itemCount: conversations.length,
       itemBuilder: (context, index) {
-        return ConversationWidget(index: index);
+        return ConversationWidget(
+          conversation: conversations[index],
+        );
       },
     );
   }

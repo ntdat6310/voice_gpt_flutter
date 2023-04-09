@@ -22,14 +22,8 @@ abstract class _ChatStoreBase with Store {
   // and update the interface as needed.
   late ConversationModel _conversation;
 
-  _ChatStoreBase({required ConversationModel? conversation})
-      : _conversation = conversation ?? ConversationModel.createNew() {
-    reaction((_) => _conversation.messageObservable.length, (_) {
-      print(_conversation.messageObservable.toString());
-      print("Length messageObservable: ${_conversation.messageObservable.length}");
-      print("Length messageList: ${_conversation.messageList.length}");
-    });
-  }
+  _ChatStoreBase({required ConversationModel conversation})
+      : _conversation = conversation;
 
   @observable
   TextEditingController textController = TextEditingController();

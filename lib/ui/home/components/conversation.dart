@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
+import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 
 class ConversationWidget extends StatelessWidget {
-  const ConversationWidget({Key? key, required this.index}) : super(key: key);
-  final int index;
+  const ConversationWidget({Key? key, required this.conversation})
+      : super(key: key);
+  final ConversationModel conversation;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_){
+          return ChatPage(conversation: conversation);
+        }));
+      },
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Background.backgroundColor),
         padding: MaterialStateProperty.all(
@@ -19,16 +26,16 @@ class ConversationWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.chat_bubble_outline,
                 color: Colors.white,
                 size: 24,
               ), // Icon message
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(
-                'Message Title', // Message title
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                conversation.messageObservable[0].content, // Message title
+                style: const TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
           ),

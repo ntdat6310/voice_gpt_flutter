@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:voice_gpt_flutter/data/services/local_storage_service.dart';
 import 'package:voice_gpt_flutter/data/shared_preferences/shared_preference_helper.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 import 'package:voice_gpt_flutter/ui/home/home_page.dart';
 
-void main()  async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize SharedPreferenceHelper
   await SharedPreferenceHelper().init();
+
+  // Initialize LocalStorageService
+  await LocalStorageService().init();
 
   runApp(const MyApp());
 }
@@ -17,6 +21,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: HomePage());
+    return MaterialApp(home: HomePage());
   }
 }
