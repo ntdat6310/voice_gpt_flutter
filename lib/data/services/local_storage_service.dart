@@ -34,10 +34,7 @@ class LocalStorageService {
     await _singleton.conversationBox
         .put(conversation.createdAt.millisecondsSinceEpoch.toString(),
             conversation)
-        .then((_) {
-      print(
-          "LocalStorageService - addConversation - then conversation.createAt ${conversation.createdAt.millisecondsSinceEpoch.toString()}");
-    }).catchError((error) {
+        .catchError((error) {
       print("Error at LocalStorageService.addConversation" + error.toString());
       throw error;
     });
@@ -51,6 +48,10 @@ class LocalStorageService {
           "Error at LocalStorageService.deleteConversation" + error.toString());
       throw error;
     });
+  }
+
+  static Future<void> clearConversations() async {
+    await _singleton.conversationBox.clear();
   }
 
   static ObservableList<ConversationModel> getConversations() {
