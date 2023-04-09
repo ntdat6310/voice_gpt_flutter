@@ -53,6 +53,28 @@ mixin _$HomeStore on _HomeStoreBase, Store {
   }
 
   @override
+  void deleteConversation(ConversationModel conversation) {
+    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
+        name: '_HomeStoreBase.deleteConversation');
+    try {
+      return super.deleteConversation(conversation);
+    } finally {
+      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void deleteAllConversations() {
+    final _$actionInfo = _$_HomeStoreBaseActionController.startAction(
+        name: '_HomeStoreBase.deleteAllConversations');
+    try {
+      return super.deleteAllConversations();
+    } finally {
+      _$_HomeStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 

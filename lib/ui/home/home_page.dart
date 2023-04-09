@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
-import 'package:voice_gpt_flutter/data/models/message.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:voice_gpt_flutter/stores/home/home_store.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
@@ -80,7 +79,9 @@ class HomePage extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 16)),
                     elevation: MaterialStateProperty.all(0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _showConfirmationDialog(context);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,14 +133,52 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Future<void> _showConfirmationDialog(BuildContext context) async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Warning',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content:
+              const Text('Are you sure you want to delete all conversation'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Yes, do it!'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (result != null && result) {
+      homeStore.deleteAllConversations();
+    } else {}
+  }
+
   ListView _buildConversationList(
       {required ObservableList<ConversationModel> conversations}) {
-    print("_buildConversationList ${conversations.length}");
     return ListView.builder(
       itemCount: conversations.length,
       itemBuilder: (context, index) {
         return ConversationWidget(
           conversation: conversations[index],
+          deleteConversation: homeStore.deleteConversation,
         );
       },
     );

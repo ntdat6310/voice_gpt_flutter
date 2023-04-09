@@ -4,9 +4,49 @@ import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 
 class ConversationWidget extends StatelessWidget {
-  const ConversationWidget({Key? key, required this.conversation})
+  const ConversationWidget(
+      {Key? key, required this.conversation, required this.deleteConversation})
       : super(key: key);
   final ConversationModel conversation;
+  final Function(ConversationModel) deleteConversation;
+
+  Future<void> _showConfirmationDialog(BuildContext context) async {
+    bool? result = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Warning',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content:
+              const Text('Are you sure you want to delete this conversation'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Yes, do it!'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    if (result != null && result == true) {
+      deleteConversation(conversation);
+    } else {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +86,8 @@ class ConversationWidget extends StatelessWidget {
                         conversation.messageObservable.isNotEmpty
                             ? conversation.messageObservable[0].content
                             : "", // Message title
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                         maxLines: 1, // Giới hạn chỉ hiển thị 1 dòng
                         overflow: TextOverflow
                             .ellipsis, // Thêm "..." nếu vượt quá giới hạn
@@ -58,6 +99,7 @@ class ConversationWidget extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   print("delete icon clicked");
+                  _showConfirmationDialog(context);
                 },
                 icon: const Icon(
                   Icons.delete,

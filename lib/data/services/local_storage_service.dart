@@ -25,10 +25,6 @@ class LocalStorageService {
   static Future<void> addConversation(ConversationModel conversation) async {
     print(
         "LocalStorageService - addConversation conversation.createAt ${conversation.createdAt.millisecondsSinceEpoch.toString()}");
-
-    // conversationBox.add(conversation);
-    // Nếu add vậy thì key đâu => K có key làm sao lấy ra?
-
     // Chuyển các messageObservableList sang messageList để lưu!
     conversation.equalizeMessageList();
     await _singleton.conversationBox
@@ -60,7 +56,6 @@ class LocalStorageService {
     List<ConversationModel> newConversations =
         _singleton.conversationBox.values.toList();
     for (ConversationModel conversation in newConversations) {
-      print("Key: ${_singleton.conversationBox.keyAt(0)}");
       print(
           "LocalStorageService - getConversations conversation.createAt ${conversation.createdAt.microsecondsSinceEpoch.toString()}");
       //// Cách 1 : Cả hai phương thức này đều tham chiếu đến cùng một đối tượng trong bộ nhớ

@@ -28,13 +28,18 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
+    // Tại sao khi nhấn back thì nó có gọi dispose
+    // Nhưng khi thoát ứng dụng bằng nút overview thì lại lost connection to device
+    // và không gọi dispose?
     if (messageLength != chatStore.conversation.messageObservable.length) {
+      print("ChatPage - dispose..........");
       LocalStorageService.addConversation(chatStore.conversation);
       // Navigator.pop(context, chatStore.conversation);
       // Không nên để Navigator.pop ở dispose. Vì sao?
     }
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +87,7 @@ class _ChatPageState extends State<ChatPage> {
   void _onBackPressed(BuildContext context) {
     // Thực hiện các thao tác khi nút Back được nhấn
     if (messageLength != chatStore.conversation.messageObservable.length) {
-      LocalStorageService.addConversation(chatStore.conversation);
+      // LocalStorageService.addConversation(chatStore.conversation);
       Navigator.pop(context, chatStore.conversation);
     } else {
       Navigator.pop(context, null);

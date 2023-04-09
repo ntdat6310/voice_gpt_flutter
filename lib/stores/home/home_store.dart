@@ -12,7 +12,7 @@ abstract class _HomeStoreBase with Store {
   @readonly
   late ObservableList<ConversationModel> _conversations;
 
-  _HomeStoreBase() : _conversations = LocalStorageService.getConversations() {}
+  _HomeStoreBase() : _conversations = LocalStorageService.getConversations();
 
   @action
   ConversationModel createNewConversation() {
@@ -26,5 +26,17 @@ abstract class _HomeStoreBase with Store {
   @action
   void addConversation(ConversationModel conversation) {
     _conversations.insert(0, conversation);
+  }
+
+  @action
+  void deleteConversation(ConversationModel conversation){
+    LocalStorageService.deleteConversation(conversation);
+    _conversations.remove(conversation);
+  }
+
+  @action
+  void deleteAllConversations(){
+    LocalStorageService.clearConversations();
+    _conversations.clear();
   }
 }
