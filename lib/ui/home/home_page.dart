@@ -6,6 +6,7 @@ import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:voice_gpt_flutter/stores/home/home_store.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 import 'package:voice_gpt_flutter/ui/home/components/conversation.dart';
+import 'package:voice_gpt_flutter/ui/setting/setting_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -107,7 +108,11 @@ class HomePage extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 16)),
                     elevation: MaterialStateProperty.all(0),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) {
+                      return SettingPage();
+                    }));
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

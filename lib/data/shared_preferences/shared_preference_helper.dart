@@ -61,7 +61,7 @@ class SharedPreferenceHelper {
   // Auto Speak:--------------------------------------------------
   static bool get autoSpeak {
     _instance._checkInitialization();
-    return _instance._sharedPreferences.getBool(Preferences.autoSpeak) ?? false;
+    return _instance._sharedPreferences.getBool(Preferences.autoSpeak) ?? true;
   }
 
   static Future<void> changeAutoSpeak({required bool isAutoSpeak}) {

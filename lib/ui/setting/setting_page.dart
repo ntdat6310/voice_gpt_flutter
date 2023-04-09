@@ -1,0 +1,109 @@
+import 'package:flutter/material.dart';
+
+import '../../shared/styles/background.dart';
+
+class SettingPage extends StatelessWidget {
+  const SettingPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Setting"),
+          backgroundColor: Background.botBackgroundColor,
+        ),
+        body: Container(
+          color: Background.backgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Background.backgroundColor),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(vertical: 16)),
+                    elevation: MaterialStateProperty.all(0),
+                  ),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      SizedBox(width: 8),
+                      Icon(Icons.dark_mode, color: Colors.white, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        "Dark mode",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(Background.backgroundColor),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(vertical: 16)),
+                    elevation: MaterialStateProperty.all(0),
+                  ),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      SizedBox(width: 8),
+                      Icon(Icons.language_outlined, color: Colors.white, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        "Language",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                    MaterialStateProperty.all(Background.backgroundColor),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(vertical: 16)),
+                    elevation: MaterialStateProperty.all(0),
+                  ),
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [
+                      SizedBox(width: 8),
+                      Icon(Icons.record_voice_over, color: Colors.white, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        "Auto speak",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
