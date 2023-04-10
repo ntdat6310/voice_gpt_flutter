@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConversationWidget extends StatelessWidget {
   const ConversationWidget(
@@ -15,26 +16,26 @@ class ConversationWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(
-            'Warning',
+          title: Text(
+            AppLocalizations.of(context)!.warning,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.red,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
-          content:
-              const Text('Are you sure you want to delete this conversation'),
+          content: Text(AppLocalizations.of(context)!
+              .confirm_delete_conversation_message),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: const Text('Yes, do it!'),
+              child: Text(AppLocalizations.of(context)!.yes_do_it),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -98,7 +99,6 @@ class ConversationWidget extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  print("delete icon clicked");
                   _showConfirmationDialog(context);
                 },
                 icon: const Icon(

@@ -12,6 +12,10 @@
   "auto_speak_setting": "Cài Đặt Tự Động Đọc",
   "enable": "Cho phép",
   "disable": "Vô hiệu hóa",
-  "select_robot_language": "Chọn Ngôn Ngữ Đọc"
-
+  "select_robot_language": "Chọn Ngôn Ngữ Đọc",
+  "confirm_delete_conversation_message": "Bạn có chắc chắn muốn xóa cuộc hội thoại này?",
+  "confirm_delete_all_conversation_message": "Bạn có chắc chắn muốn xóa tất cả các cuộc hội thoại?",
+  "cancel": "Hủy bỏ",
+  "yes_do_it": "Tôi chắc chắn",
+  "warning": "Cảnh báo"
 }

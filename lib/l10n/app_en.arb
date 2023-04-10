@@ -12,5 +12,10 @@
   "auto_speak_setting": "Auto Speak Settings",
   "enable": "Enable",
   "disable": "Disable",
-  "select_robot_language": "Select Robot Language"
+  "select_robot_language": "Select Robot Language",
+  "confirm_delete_conversation_message": "Are you sure you want to delete this conversation?",
+  "confirm_delete_all_conversation_message": "Are you sure you want to delete all conversations?",
+  "cancel": "Cancel",
+  "yes_do_it": "Yes, do it",
+  "warning": "Warning"
 }
