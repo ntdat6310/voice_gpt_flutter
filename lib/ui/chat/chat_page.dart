@@ -48,6 +48,7 @@ class _ChatPageState extends State<ChatPage> {
       // Navigator.pop(context, chatStore.conversation);
       // Không nên để Navigator.pop ở dispose. Vì sao?
     }
+    textToSpeechStore.stop();
     super.dispose();
   }
 

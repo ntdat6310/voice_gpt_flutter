@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/shared/enum.dart';
-import 'package:voice_gpt_flutter/shared/styles/background.dart';
 
 class AutoSpeakDialog extends StatelessWidget {
   const AutoSpeakDialog({Key? key, required this.initialStatus})

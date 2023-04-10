@@ -33,12 +33,16 @@ abstract class _TextToSpeechBase with Store {
   @readonly
   int _messageSpeakingIndex = -1;
 
-  _TextToSpeechBase() : _isAutoSpeak = SharedPreferenceHelper.autoSpeak {
+  _TextToSpeechBase()
+      : _isAutoSpeak = SharedPreferenceHelper.autoSpeak,
+        _language = SharedPreferenceHelper.chatBotSpeakingLanguage {
     _initTts();
   }
 
   Future<void> _initTts() async {
     _flutterTts = FlutterTts();
+
+    _flutterTts.setLanguage(_language!);
 
     _flutterTts.setStartHandler(() {
       _isPlaying = true;
@@ -109,5 +113,12 @@ abstract class _TextToSpeechBase with Store {
     await _flutterTts.stop();
     _isPlaying = false;
     _messageSpeakingIndex = -1;
+  }
+
+  Future<List> getLanguages() async {
+    List<dynamic> languages = await _flutterTts.getLanguages;
+    print("languages:_______________");
+    print(languages.toString());
+    return languages;
   }
 }

@@ -69,4 +69,16 @@ class SharedPreferenceHelper {
     return _instance._sharedPreferences
         .setBool(Preferences.autoSpeak, isAutoSpeak);
   }
+
+  // ChatBot Speaking Language:----------------------------------------------
+  static String get chatBotSpeakingLanguage {
+    _instance._checkInitialization();
+    return _instance._sharedPreferences.getString(Preferences.chatBotSpeakingLanguage) ?? "en-US";
+  }
+
+  static Future<void> changeChatBotSpeakingLanguage({required String chatBotSpeakingLanguage}) {
+    _instance._checkInitialization();
+    return _instance._sharedPreferences
+        .setString(Preferences.chatBotSpeakingLanguage, chatBotSpeakingLanguage);
+  }
 }
