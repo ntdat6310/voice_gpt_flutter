@@ -30,12 +30,29 @@ abstract class _TextToSpeechBase with Store {
   @readonly
   bool _isAutoSpeak = true;
 
+  @readonly
+  int _messageSpeakingIndex = -1;
+
   _TextToSpeechBase() : _isAutoSpeak = SharedPreferenceHelper.autoSpeak {
     _initTts();
   }
 
   Future<void> _initTts() async {
     _flutterTts = FlutterTts();
+
+    _flutterTts.setStartHandler(() {
+      _isPlaying = true;
+    });
+
+    _flutterTts.setCompletionHandler(() {
+      _isPlaying = false;
+      _messageSpeakingIndex = -1;
+    });
+
+    _flutterTts.setErrorHandler((msg) {
+      _isPlaying = false;
+      _messageSpeakingIndex = -1;
+    });
   }
 
   @action
@@ -70,18 +87,20 @@ abstract class _TextToSpeechBase with Store {
   @action
   Future<void> speak() async {
     if (_newVoiceText != null && _newVoiceText!.isNotEmpty) {
-      print("TextToSpeech - speak");
-      _isPlaying = true;
       await _flutterTts.speak(_newVoiceText!);
-      _isPlaying = false;
     }
   }
 
   @action
-  Future<void> autoSpeak(String text) async {
+  Future<void> speakText(String text, int messageSpeakingIndex) async {
+    _messageSpeakingIndex = messageSpeakingIndex;
+    await _flutterTts.speak(text);
+  }
+
+  @action
+  Future<void> autoSpeak(String text, int messageSpeakingIndex) async {
     if (_isAutoSpeak) {
-      await setNewVoiceText(text);
-      await speak();
+      await speakText(text, messageSpeakingIndex);
     }
   }
 
@@ -89,5 +108,6 @@ abstract class _TextToSpeechBase with Store {
   Future<void> stop() async {
     await _flutterTts.stop();
     _isPlaying = false;
+    _messageSpeakingIndex = -1;
   }
 }

@@ -110,9 +110,12 @@ class _ChatPageState extends State<ChatPage> {
       itemCount: chatStore.conversation.messageObservable.length,
       itemBuilder: (context, index) {
         return ChatMessageWidget(
-            content: chatStore.conversation.messageObservable[index].content,
-            senderType:
-                chatStore.conversation.messageObservable[index].senderType);
+          content: chatStore.conversation.messageObservable[index].content,
+          senderType:
+              chatStore.conversation.messageObservable[index].senderType,
+          messageIndex: index,
+          textToSpeechStore: textToSpeechStore,
+        );
       },
     );
   }

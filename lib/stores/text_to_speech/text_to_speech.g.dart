@@ -135,6 +135,25 @@ mixin _$TextToSpeechStore on _TextToSpeechBase, Store {
     });
   }
 
+  late final _$_messageSpeakingIndexAtom =
+      Atom(name: '_TextToSpeechBase._messageSpeakingIndex', context: context);
+
+  int get messageSpeakingIndex {
+    _$_messageSpeakingIndexAtom.reportRead();
+    return super._messageSpeakingIndex;
+  }
+
+  @override
+  int get _messageSpeakingIndex => messageSpeakingIndex;
+
+  @override
+  set _messageSpeakingIndex(int value) {
+    _$_messageSpeakingIndexAtom.reportWrite(value, super._messageSpeakingIndex,
+        () {
+      super._messageSpeakingIndex = value;
+    });
+  }
+
   late final _$setLanguageAsyncAction =
       AsyncAction('_TextToSpeechBase.setLanguage', context: context);
 
@@ -183,12 +202,22 @@ mixin _$TextToSpeechStore on _TextToSpeechBase, Store {
     return _$speakAsyncAction.run(() => super.speak());
   }
 
+  late final _$speakTextAsyncAction =
+      AsyncAction('_TextToSpeechBase.speakText', context: context);
+
+  @override
+  Future<void> speakText(String text, int messageSpeakingIndex) {
+    return _$speakTextAsyncAction
+        .run(() => super.speakText(text, messageSpeakingIndex));
+  }
+
   late final _$autoSpeakAsyncAction =
       AsyncAction('_TextToSpeechBase.autoSpeak', context: context);
 
   @override
-  Future<void> autoSpeak(String text) {
-    return _$autoSpeakAsyncAction.run(() => super.autoSpeak(text));
+  Future<void> autoSpeak(String text, int messageSpeakingIndex) {
+    return _$autoSpeakAsyncAction
+        .run(() => super.autoSpeak(text, messageSpeakingIndex));
   }
 
   late final _$stopAsyncAction =

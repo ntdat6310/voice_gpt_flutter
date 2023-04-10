@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
 import 'package:voice_gpt_flutter/stores/text_to_speech/text_to_speech.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/code_view.dart';
@@ -6,11 +7,17 @@ import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'dart:core';
 
 class ChatMessageWidget extends StatefulWidget {
-   ChatMessageWidget(
-      {Key? key, required this.content, required this.senderType})
-      : super(key: key);
+  const ChatMessageWidget({
+    Key? key,
+    required this.content,
+    required this.senderType,
+    required this.messageIndex,
+    required this.textToSpeechStore,
+  }) : super(key: key);
   final String content;
   final SenderType senderType;
+  final int messageIndex;
+  final TextToSpeechStore textToSpeechStore;
 
   @override
   State<ChatMessageWidget> createState() => _ChatMessageWidgetState();
@@ -60,10 +67,23 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
 
   IconButton _buildSpeakButton() {
     return IconButton(
-        onPressed: () {
-          print("_buildSpeakButton clicked");
+        onPressed: () async {
+          if (widget.textToSpeechStore.isPlaying &&
+              widget.textToSpeechStore.messageSpeakingIndex == widget.messageIndex) {
+            await widget.textToSpeechStore.stop();
+          } else {
+            await widget.textToSpeechStore
+                .speakText(widget.content, widget.messageIndex);
+          }
         },
-        icon: const Icon(Icons.play_circle_outline, color: Colors.white));
+        icon: _buildIcon());
+  }
+
+  Icon _buildIcon(){
+    return widget.textToSpeechStore.isPlaying &&
+        widget.textToSpeechStore.messageSpeakingIndex == widget.messageIndex
+        ? const Icon(Icons.stop_circle_outlined, color: Colors.white)
+        : const Icon(Icons.play_circle_outline, color: Colors.white);
   }
 
   @override
@@ -99,7 +119,7 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
           ),
           Visibility(
             visible: widget.senderType == SenderType.bot,
-            child: _buildSpeakButton(),
+            child: Observer(builder: (_) => _buildSpeakButton()),
           ),
         ],
       ),

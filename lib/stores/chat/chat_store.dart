@@ -93,7 +93,8 @@ abstract class _ChatStoreBase with Store {
       ),
     );
     if (_autoSpeakCallback != null) {
-      _autoSpeakCallback!(botMessage);
+      _autoSpeakCallback!(
+          botMessage, _conversation.messageObservable.length - 1);
     }
   }
 
