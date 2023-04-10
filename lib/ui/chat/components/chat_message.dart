@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/data/models/message.dart';
+import 'package:voice_gpt_flutter/stores/text_to_speech/text_to_speech.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/code_view.dart';
 import 'package:voice_gpt_flutter/shared/styles/background.dart';
 import 'dart:core';
 
 class ChatMessageWidget extends StatefulWidget {
-  const ChatMessageWidget({Key? key, required this.content, required this.senderType})
+   ChatMessageWidget(
+      {Key? key, required this.content, required this.senderType})
       : super(key: key);
   final String content;
   final SenderType senderType;
@@ -39,9 +41,13 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
   Container _buildBotIcon() {
     return Container(
         margin: const EdgeInsets.only(right: 12.0),
-        child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            child: Image.asset('assets/icons/icon_bot.png')));
+        child: Column(
+          children: [
+            CircleAvatar(
+                backgroundColor: Colors.transparent,
+                child: Image.asset('assets/icons/icon_bot.png')),
+          ],
+        ));
   }
 
   Container _buildUserIcon() {
@@ -50,6 +56,14 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
         child: CircleAvatar(
             backgroundColor: Colors.transparent,
             child: Image.asset('assets/icons/icon_user.png')));
+  }
+
+  IconButton _buildSpeakButton() {
+    return IconButton(
+        onPressed: () {
+          print("_buildSpeakButton clicked");
+        },
+        icon: const Icon(Icons.play_circle_outline, color: Colors.white));
   }
 
   @override
@@ -82,7 +96,11 @@ class _ChatMessageWidgetState extends State<ChatMessageWidget> {
                     );
                   }
                 })),
-          )
+          ),
+          Visibility(
+            visible: widget.senderType == SenderType.bot,
+            child: _buildSpeakButton(),
+          ),
         ],
       ),
     );

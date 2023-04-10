@@ -14,6 +14,11 @@ class ChatStore = _ChatStoreBase with _$ChatStore;
 abstract class _ChatStoreBase with Store {
   late SpeechToTextStore _speechToTextStore;
 
+  Function? _autoSpeakCallback;
+  void setAutoSpeakCallback(Function callback) {
+    _autoSpeakCallback = callback;
+  }
+
   @readonly
   bool _isLoading = false;
 
@@ -87,6 +92,9 @@ abstract class _ChatStoreBase with Store {
         senderType: SenderType.bot,
       ),
     );
+    if (_autoSpeakCallback != null) {
+      _autoSpeakCallback!(botMessage);
+    }
   }
 
   @action

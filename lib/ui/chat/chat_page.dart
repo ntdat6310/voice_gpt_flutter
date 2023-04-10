@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:voice_gpt_flutter/data/models/conversation.dart';
 import 'package:voice_gpt_flutter/data/services/local_storage_service.dart';
 import 'package:voice_gpt_flutter/stores/speak_to_text/speech_to_text.dart';
+import 'package:voice_gpt_flutter/stores/text_to_speech/text_to_speech.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/chat_message.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/loading.dart';
 import 'package:voice_gpt_flutter/ui/chat/components/regenerate_response.dart';
@@ -21,14 +22,17 @@ class _ChatPageState extends State<ChatPage> {
   late final ChatStore chatStore;
   late final int messageLength;
   late final SpeechToTextStore speechToTextStore;
+  late final TextToSpeechStore textToSpeechStore;
 
   @override
   void initState() {
     speechToTextStore = SpeechToTextStore();
+    textToSpeechStore = TextToSpeechStore();
     chatStore = ChatStore(
         conversation: widget.conversation,
         speechToTextStore: speechToTextStore);
     speechToTextStore.setOnSpeechResultCallback(chatStore.updateTextField);
+    chatStore.setAutoSpeakCallback(textToSpeechStore.autoSpeak);
     messageLength = chatStore.conversation.messageObservable.length;
     super.initState();
   }
