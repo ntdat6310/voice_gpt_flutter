@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:voice_gpt_flutter/data/services/local_storage_service.dart';
 import 'package:voice_gpt_flutter/stores/speak_to_text/speech_to_text.dart';
 
 import '../../data/models/conversation.dart';
@@ -105,6 +106,7 @@ abstract class _ChatStoreBase with Store {
       enableShowRegenerateResponse();
       addBotMessageToList("Đã có lỗi xảy ra, xin vui lòng thử lại.");
     }
+    LocalStorageService.addConversation(_conversation);
   }
 
   @action
@@ -124,6 +126,8 @@ abstract class _ChatStoreBase with Store {
       enableShowRegenerateResponse();
       addBotMessageToList("Đã có lỗi xảy ra, xin vui lòng thử lại.");
     }
+
+    LocalStorageService.addConversation(_conversation);
   }
 
   @action
@@ -135,6 +139,7 @@ abstract class _ChatStoreBase with Store {
       String botMessage = await chatGptService.fetchChatResponse(_textInput);
       disableLoading();
       addBotMessageToList(botMessage);
+      LocalStorageService.addConversation(_conversation);
     } catch (e) {
       disableLoading();
       enableShowRegenerateResponse();
