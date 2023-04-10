@@ -1,0 +1,16 @@
+{
+  "language": "English",
+  "setting": "Setting",
+  "system_language": "System Language",
+  "home": "Home",
+  "dark_mode": "Dark mode",
+  "language_select": "Language",
+  "auto_speak": "Auto speak",
+  "chatbot_language": "ChatBot language",
+  "new_chat": "New Chat",
+  "clear_all_conversations": "Clear All Conversations",
+  "auto_speak_setting": "Auto Speak Settings",
+  "enable": "Enable",
+  "disable": "Disable",
+  "select_robot_language": "Select Robot Language"
+}

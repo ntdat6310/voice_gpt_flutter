@@ -52,10 +52,10 @@ class SharedPreferenceHelper {
     return _instance._sharedPreferences.getString(Preferences.currentLanguage);
   }
 
-  static Future<void> changeLanguage({required String language}) {
+  static Future<void> changeLanguage({required String languageCode}) {
     _instance._checkInitialization();
     return _instance._sharedPreferences
-        .setString(Preferences.currentLanguage, language);
+        .setString(Preferences.currentLanguage, languageCode);
   }
 
   // Auto Speak:--------------------------------------------------

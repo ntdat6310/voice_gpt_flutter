@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:voice_gpt_flutter/data/models/language.dart';
 import 'package:voice_gpt_flutter/shared/enum.dart';
 import 'package:voice_gpt_flutter/stores/auto_speak/auto_speak.dart';
 import 'package:voice_gpt_flutter/stores/chatbot_speaking_language/chatbot_speaking_language.dart';
+import 'package:voice_gpt_flutter/stores/language/language_store.dart';
 import 'package:voice_gpt_flutter/stores/text_to_speech/text_to_speech.dart';
 import 'package:voice_gpt_flutter/ui/setting/components/auto_speak_dialog.dart';
+import 'package:voice_gpt_flutter/ui/setting/components/language_dialog.dart';
 import 'package:voice_gpt_flutter/ui/setting/components/language_speak_chatbot_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../shared/styles/background.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({Key? key}) : super(key: key);
-
+  const SettingPage({Key? key, required this.languageStore}) : super(key: key);
+  final LanguageStore languageStore;
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
@@ -21,24 +25,26 @@ class _SettingPageState extends State<SettingPage> {
       ChatBotSpeakingLanguageStore();
   final TextToSpeechStore _textToSpeechStore = TextToSpeechStore();
   List<dynamic> languagesChatBot = [];
+  late final LanguageStore _languageStore;
 
   @override
   void initState() {
     _textToSpeechStore.getLanguages().then((value) {
       languagesChatBot = value;
     });
+
+    _languageStore = widget.languageStore;
+
+    print("Language: ${_languageStore.locale.languageCode.toString()}");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("AutoSpeak: ${_autoSpeakStore.isAutoSpeak.toString()}");
-    print("ChatBot Language: ${_chatBotSpeakingLanguageStore.chatBotSpeakingLanguage.toString()}");
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Setting"),
+          title: Text(AppLocalizations.of(context)!.setting),
           backgroundColor: Background.botBackgroundColor,
         ),
         body: Container(
@@ -61,13 +67,14 @@ class _SettingPageState extends State<SettingPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.dark_mode, color: Colors.white, size: 24),
-                      SizedBox(width: 12),
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.dark_mode,
+                          color: Colors.white, size: 24),
+                      const SizedBox(width: 12),
                       Text(
-                        "Dark mode",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.dark_mode,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),
@@ -83,18 +90,27 @@ class _SettingPageState extends State<SettingPage> {
                         const EdgeInsets.symmetric(vertical: 16)),
                     elevation: MaterialStateProperty.all(0),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    String? languageCode = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const LanguageDialog();
+                        });
+                    if (languageCode != null) {
+                      _languageStore.setLocale(languageCode: languageCode);
+                    }
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.language_outlined,
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.language_outlined,
                           color: Colors.white, size: 24),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
-                        "Language",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.language_select,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),
@@ -125,14 +141,14 @@ class _SettingPageState extends State<SettingPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.record_voice_over,
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.record_voice_over,
                           color: Colors.white, size: 24),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
-                        "Auto speak",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.auto_speak,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),
@@ -164,14 +180,14 @@ class _SettingPageState extends State<SettingPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.record_voice_over,
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.record_voice_over,
                           color: Colors.white, size: 24),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
-                        "ChatBot language",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.chatbot_language,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_gpt_flutter/shared/enum.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AutoSpeakDialog extends StatelessWidget {
   const AutoSpeakDialog({Key? key, required this.initialStatus})
@@ -9,18 +10,18 @@ class AutoSpeakDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Auto Speak Settings'),
+      title: Text(AppLocalizations.of(context)!.auto_speak_setting),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            title: const Text('Enable'),
+            title: Text(AppLocalizations.of(context)!.enable),
             onTap: () {
               Navigator.pop(context, AutoSpeakStatus.enable);
             },
           ),
           ListTile(
-            title: const Text('Disable'),
+            title: Text(AppLocalizations.of(context)!.disable),
             onTap: () {
               Navigator.pop(context, AutoSpeakStatus.disable);
             },

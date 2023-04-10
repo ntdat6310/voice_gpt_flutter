@@ -1,0 +1,17 @@
+{
+  "language": "Tiếng Việt",
+  "setting": "Cài đặt",
+  "system_language": "Ngôn Ngữ Hệ Thống",
+  "home": "Trang Chủ",
+  "dark_mode": "Giao diện tối",
+  "language_select": "Ngôn ngữ",
+  "auto_speak": "Tự động đọc",
+  "chatbot_language": "Ngôn ngữ của Robot",
+  "new_chat": "Cuộc trò truyện mới",
+  "clear_all_conversations": "Xóa hết cuộc trò chuyện",
+  "auto_speak_setting": "Cài Đặt Tự Động Đọc",
+  "enable": "Cho phép",
+  "disable": "Vô hiệu hóa",
+  "select_robot_language": "Chọn Ngôn Ngữ Đọc"
+
+}

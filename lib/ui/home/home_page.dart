@@ -7,10 +7,14 @@ import 'package:voice_gpt_flutter/stores/home/home_store.dart';
 import 'package:voice_gpt_flutter/ui/chat/chat_page.dart';
 import 'package:voice_gpt_flutter/ui/home/components/conversation.dart';
 import 'package:voice_gpt_flutter/ui/setting/setting_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../stores/language/language_store.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key, required this.languageStore}) : super(key: key);
 
+  final LanguageStore languageStore;
   final HomeStore homeStore = HomeStore();
 
   @override
@@ -18,7 +22,7 @@ class HomePage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-            title: const Text("Home"),
+            title: Text(AppLocalizations.of(context)!.home),
             backgroundColor: Background.botBackgroundColor),
         body: Container(
           color: Background.backgroundColor,
@@ -50,13 +54,13 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.add_circle, color: Colors.white, size: 24),
-                      SizedBox(width: 12),
+                    children:  [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.add_circle, color: Colors.white, size: 24),
+                      const SizedBox(width: 12),
                       Text(
-                        "New Chat",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.new_chat,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),
@@ -86,13 +90,13 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.delete, color: Colors.white, size: 24),
-                      SizedBox(width: 8),
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.delete, color: Colors.white, size: 24),
+                      const SizedBox(width: 8),
                       Text(
-                        "Clear All Conversations",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.clear_all_conversations,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),
@@ -110,19 +114,19 @@ class HomePage extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) {
-                      return SettingPage();
+                      return SettingPage(languageStore: languageStore);
                     }));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const [
-                      SizedBox(width: 8),
-                      Icon(Icons.settings, color: Colors.white, size: 24),
-                      SizedBox(width: 8),
+                    children: [
+                      const SizedBox(width: 8),
+                      const Icon(Icons.settings, color: Colors.white, size: 24),
+                      const SizedBox(width: 8),
                       Text(
-                        "Settings",
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.setting,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),

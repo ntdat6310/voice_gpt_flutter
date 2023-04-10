@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LanguageSpeakChatBotDialog extends StatelessWidget {
   const LanguageSpeakChatBotDialog({Key? key, required this.languages})
@@ -8,7 +9,7 @@ class LanguageSpeakChatBotDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Auto Speak Settings'),
+      title: Text(AppLocalizations.of(context)!.select_robot_language),
       content: SizedBox(
         height: MediaQuery.of(context).size.height * 0.5, // Giới hạn chiều cao của nội dung
         width: MediaQuery.of(context).size.width * 0.8, // Giới hạn chiều rộng của nội dung
