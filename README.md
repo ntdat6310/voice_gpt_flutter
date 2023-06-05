@@ -14,6 +14,8 @@ This project is a mobile application developed by Flutter for the Advanced Mobil
 
 Youtube : https://youtu.be/BwOX5UH40gU hoặc [Link](https://youtu.be/BwOX5UH40gU)
 
+Video Update (add demo speech to text) : https://youtu.be/OUJMYYs7o_o
+
 ## How to run this project
 
 **Step 1:**
